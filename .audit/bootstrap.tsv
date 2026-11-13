@@ -1,0 +1,10 @@
+ts	phase	decision	why	evidence	result
+2026-11-13T08:52:39.688Z	scope	独立中文MVP，复用Harly文档模块	完整ATS运行拓扑较重；原规则对中文未能提取同类证据	src/vendor/harly/ORIGIN.json; docs/ARCHITECTURE.md	accepted
+2026-11-13T08:52:39.689Z	review	岗位草稿复用保存约束	发现模型生成40+40权重会导致后续保存失败	tests/draft.test.ts	fixed
+2026-11-13T08:52:39.689Z	review	未说明/尚无经历排除正向命中	示例C的缺失信息语句曾抬高coverage	tests/evaluation.test.ts	fixed
+2026-11-13T08:52:39.689Z	verify	浏览器验收采用官方headless shell	当前容器默认Chromium本地套接字受限；使用兼容Linux构建保持真实浏览器测试	playwright.config.ts; docs/TEST-REPORT.md	adapted
+2026-11-13T08:52:39.689Z	verify	收敛真实selector并补控件名称	初轮UI测试暴露入口重名与隐式label定位问题	tests/e2e/workflow.spec.ts; src/client/App.tsx	fixed
+2026-11-13T08:58:05.782Z	verify	统一验收通过	typecheck、28 tests、build、2 E2E 均成功	evidence/release/summary.json; verified head 458c97e6abfa951cd0ee00f2fff92f2853c1ae16	PASS
+2026-11-13T08:58:05.782Z	verify	干净源码安装与重启验证通过	未复制 node_modules，npm ci 与 production build 后运行 doctor，停止重启保留数据	evidence/release/release-smoke.json	PASS
+2026-11-13T08:58:05.782Z	review	交付文档最终核对	独立上下文只读核对未见阻断；不计为跨模型审阅	docs/TEST-REPORT.md; docs/PSTACK.md	PASS
+2026-11-13T09:56:32Z	publication	公开源码建立干净初始历史	移除旧历史bundle及原包清单；泛化个人模型映射和验证证据工作区路径	docs/PSTACK.md; docs/TEST-REPORT.md	prepared

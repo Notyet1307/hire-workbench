@@ -1,0 +1,10 @@
+node_modules
+dist
+data
+.env
+.git
+.verification
+evidence
+test-results
+playwright-report
+*.zip

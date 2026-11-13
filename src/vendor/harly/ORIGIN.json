@@ -1,0 +1,14 @@
+{
+  "project": "Harly",
+  "repository": "https://github.com/Vytral/harly",
+  "commit": "899cddb32cd30f4d35c96fab915cf069695095c0",
+  "retrievedAt": "2026-11-13",
+  "license": "MIT",
+  "files": [{
+    "local": "document.ts",
+    "upstream": "apps/web/src/lib/evaluation/parsing/document.ts",
+    "url": "https://github.com/Vytral/harly/blob/899cddb32cd30f4d35c96fab915cf069695095c0/apps/web/src/lib/evaluation/parsing/document.ts",
+    "modified": false
+  }],
+  "scope": "Only Unicode text-readability checks, text-block representation and provider interfaces are reused. This project is an independent MVP, not a complete Harly fork."
+}

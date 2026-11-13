@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-11-13T08:57:09.760Z",
+  "sourceRevision": "458c97e6abfa951cd0ee00f2fff92f2853c1ae16",
+  "node": "v24.22.1",
+  "platform": "linux",
+  "source": "fresh git archive; no copied node_modules",
+  "cleanInstall": "npm ci: PASS (263 packages installed)",
+  "cleanBuild": "npm run build: PASS",
+  "health": {
+    "ok": true,
+    "version": "0.1.0",
+    "database": "ready"
+  },
+  "htmlAndClientAsset": "HTTP 200",
+  "initialDemo": {
+    "jobs": 2,
+    "candidates": 3
+  },
+  "doctor": {
+    "exitCode": 0,
+    "stdout": "\n> hire-workbench@0.1.0 doctor\n> node --env-file-if-exists=.env scripts/doctor.mjs\n\n{\n  \"status\": \"PASS\",\n  \"version\": \"0.1.0\",\n  \"database\": \"ready\",\n  \"jobs\": 2,\n  \"candidates\": 3,\n  \"mode\": \"rules\",\n  \"providerConfigured\": false,\n  \"localOnly\": true\n}\n",
+    "stderr": "npm warn Unknown env config \"http-proxy\". This will stop working in the next major version of npm.\n.env not found. Continuing without it.\n"
+  },
+  "restartPersistence": "PASS: same candidate IDs; demo not duplicated",
+  "liveModelCalled": false
+}

@@ -1,0 +1,87 @@
+
+## npm run typecheck
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> hire-workbench@0.1.0 typecheck
+> tsc --noEmit && tsc -p tsconfig.server.json --noEmit
+
+
+## npm run test
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> hire-workbench@0.1.0 test
+> node --import tsx --test tests/*.test.ts
+
+✔ HTTP 工作流：岗位 → 简历 → 证据分析 → 复核 → 面试，并保留旧输入快照 (149.839766ms)
+✔ 岗位权重和重复维度校验在服务端强制执行 (13.313129ms)
+✔ 无模型配置和不可读简历不能生成伪成功分析 (13.659823ms)
+✔ 关联岗位幂等；输入快照与任务重试保持原版本 (15.729313ms)
+✔ SQLite 文件重启后保留数据，运行中任务被标记失败并可重试 (16.240876ms)
+✔ 远程访问需要口令；登录Cookie和跨域写入边界有效 (16.337726ms)
+✔ 业务导出包含历史资料但不包含访问凭据 (5.975751ms)
+✔ 岗位建议契约模拟：生成可编辑草稿并标记人工确认 (21.701117ms)
+✔ 岗位建议没有模型配置时不生成假 AI 内容 (0.95524ms)
+✔ 岗位建议无效输出不会被静默转换成模板 (2.450957ms)
+✔ 岗位建议契约与实际保存一致：错误权重与过长关键词被拒绝 (4.908612ms)
+✔ 中文关键词命中只产生部分满足，且引用可切回原文 (4.493768ms)
+✔ 没有证据返回未知与空分数，不把未写经历变为明确不满足 (0.360774ms)
+✔ 中英文混排的中文关键词不会被英文词边界误过滤 (0.656037ms)
+✔ 否定语境不会成为正向命中，Go 不会命中 Google (0.672398ms)
+✔ 没有模型配置时明确失败，不自动回退 (0.658909ms)
+✔ 未说明或尚无相关经历的说明不能抬高证据覆盖率 (0.478432ms)
+✔ 模型契约：严格格式、去除联系字段、逐字证据与权重计算 (7.884067ms)
+✔ 模型契约：显式 json_schema 模式发送严格 schema (1.095508ms)
+✔ 模型契约：虚构原文、缺失标准、重复标准均拒绝保存 (3.928647ms)
+✔ 模型契约：无证据的明确判断以及额外字段被拒绝 (2.897029ms)
+✔ 模型契约：HTTP 错误与超时原样成为失败，不产生规则结果 (101.427876ms)
+✔ 联系方式屏蔽保留原始长度与行位置 (0.22764ms)
+✔ 真实 UTF-8 中文 TXT 可以读取并保持证据文本 (3.419394ms)
+✔ 真实 DOCX 中文段落通过 Mammoth 提取 (42.35586ms)
+✔ 真实 PDF 文本层可以提取 (139.20065ms)
+✔ 无文字 PDF 与损坏文件进入待补文字，不生成虚假内容 (3.759589ms)
+✔ 旧版 DOC、超大文件与空文件明确拒绝 (0.606241ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 887.134728
+
+## npm run build
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> hire-workbench@0.1.0 build
+> tsc -p tsconfig.server.json && vite build
+
+vite v7.3.8 building client environment for production...
+transforming...
+✓ 1580 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/web/index.html                   0.58 kB │ gzip:  0.41 kB
+dist/web/assets/index-B5lOZ1Aq.css   52.32 kB │ gzip: 11.56 kB
+dist/web/assets/index-CBEuh9G-.js   301.86 kB │ gzip: 91.81 kB
+✓ built in 1.99s
+
+## npm run e2e
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> hire-workbench@0.1.0 e2e
+> playwright test
+
+[WebServer] (node:192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:200) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] Hire Workbench v0.1.0 ready at http://127.0.0.1:3317 | 本机模式 | 规则辅助
+
+Running 2 tests using 1 worker
+
+(node:208) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/e2e/workflow.spec.ts:10:1 › 岗位、简历、证据定位、复核与面试的完整浏览器路径 (16.6s)
+  ✓  2 tests/e2e/workflow.spec.ts:70:1 › 简历文件上传与移动宽度布局 (3.3s)
+
+  2 passed (21.6s)

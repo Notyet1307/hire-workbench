@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "startedAt": "2026-11-13T08:54:00.233Z",
+  "finishedAt": "2026-11-13T08:54:36.047Z",
+  "revision": "458c97e6abfa951cd0ee00f2fff92f2853c1ae16",
+  "node": "v24.22.1",
+  "platform": "linux",
+  "tests": [
+    {
+      "command": "npm run typecheck",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 7676
+    },
+    {
+      "command": "npm run test",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 1187
+    },
+    {
+      "command": "npm run build",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 4608
+    },
+    {
+      "command": "npm run e2e",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 22342
+    }
+  ],
+  "liveModel": "NOT_RUN: no real provider credentials",
+  "targetMacMini": "NOT_RUN: verified in Linux development environment",
+  "independentCrossModelAudit": "NOT_RUN: model routing not available in this delivery"
+}

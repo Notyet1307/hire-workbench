@@ -1,0 +1,82 @@
+import { test,expect } from '@playwright/test';
+import { mkdirSync,writeFileSync } from 'node:fs';
+import path from 'node:path';
+
+const proof=path.resolve('evidence/latest');mkdirSync(proof,{recursive:true});
+const name='浏览器验收候选人';
+const title='浏览器验收 FDE 岗位';
+const resume='【合成验收样本】\n项目经历\n使用 TypeScript 与 React 完成需求管理工作台，负责表单与查询接口。\n使用 Docker 进行本地部署，编写接口测试与项目文档，通过 Git 管理变更。\n参与安全测试课程，整理漏洞复现步骤。\n在面试中可以展示原始代码、测试报告和本人承担的工作。';
+
+test('岗位、简历、证据定位、复核与面试的完整浏览器路径',async({page,request,browser})=>{
+  const pageErrors:string[]=[];page.on('pageerror',error=>pageErrors.push(error.message));
+  await page.goto('/');await expect(page.getByRole('heading',{name:'招聘工作台'})).toBeVisible();
+  const nav=page.getByRole('navigation',{name:'主导航'});
+  await nav.getByRole('button',{name:'岗位画像'}).click();
+  await page.locator('.section-heading').getByRole('button',{name:'新建岗位',exact:true}).click();
+  const dialog=page.getByRole('dialog');
+  await dialog.getByLabel('岗位名称',{exact:true}).fill(title);
+  await dialog.getByLabel('岗位职责与要求',{exact:true}).fill('负责 TypeScript 业务应用开发、Docker 部署与自动化测试，能够说明本人在项目中的职责并提供验收证据。');
+  await dialog.getByLabel('维度权重 1',{exact:true}).fill('34');
+  await expect(dialog.getByRole('button',{name:'保存岗位',exact:true})).toBeDisabled();
+  await dialog.getByLabel('维度权重 1',{exact:true}).fill('35');
+  await dialog.getByRole('button',{name:'保存岗位',exact:true}).click();
+  await expect(page.getByRole('heading',{name:title,exact:true})).toBeVisible();
+  await page.screenshot({path:path.join(proof,'01-job.png'),fullPage:true});
+
+  await nav.getByRole('button',{name:'候选人',exact:true}).click();
+  await page.locator('.section-heading').getByRole('button',{name:'添加候选人',exact:true}).click();
+  await dialog.getByLabel('候选人姓名',{exact:true}).fill(name);
+  await dialog.getByLabel('简历原文',{exact:true}).fill(resume);
+  await dialog.getByRole('button',{name:'保存候选人',exact:true}).click();
+  await expect(page.getByRole('heading',{name,exact:true})).toBeVisible();
+  await page.locator('.empty').getByRole('button',{name:'关联岗位',exact:true}).click();
+  await dialog.getByLabel('选择岗位',{exact:true}).selectOption({label:`${title} · 招聘中`});
+  await dialog.getByRole('button',{name:'确认关联',exact:true}).click();
+  await page.getByRole('button',{name:'开始分析',exact:true}).first().click();
+  await expect(page.locator('.assessment').first()).toBeVisible();
+  const quote=page.locator('.evidence-quote').first();await quote.click();
+  await expect(page.getByTestId('resume-text').locator('mark')).toBeVisible();
+  await page.screenshot({path:path.join(proof,'02-evidence-analysis.png'),fullPage:true});
+  const state=(await (await request.get('/api/workspace')).json());
+  expect(state.analyses.length).toBe(1);expect(state.analyses[0].resumeSnapshot.resumeText).toBe(resume);
+  expect(state.analyses[0].result.coverage).toBeGreaterThan(0);
+  expect(state.analyses[0].result.assessments.some((a:{status:string})=>a.status==='unknown')).toBeTruthy();
+
+  await page.getByLabel('复核结论',{exact:true}).selectOption('advance');
+  await page.getByLabel('复核说明',{exact:true}).fill('项目证据可以定位，面试核实实际部署职责及故障排查过程。');
+  await page.getByRole('button',{name:'保存复核',exact:true}).click();
+  await expect(page.getByText('项目证据可以定位，面试核实实际部署职责及故障排查过程。',{exact:true})).toBeVisible();
+  await page.getByRole('button',{name:'安排面试',exact:true}).click();
+  await dialog.getByLabel('面试时间',{exact:true}).fill('2026-12-01T10:30');
+  await dialog.getByLabel('面试官',{exact:true}).fill('验收面试官');
+  await dialog.getByLabel('地点或会议链接',{exact:true}).fill('测试会议室 A');
+  await dialog.getByRole('button',{name:'保存面试',exact:true}).click();
+  await nav.getByRole('button',{name:'面试管理',exact:true}).click();
+  await page.getByRole('button',{name:'填写记录',exact:true}).click();
+  await dialog.getByLabel('面试记录',{exact:true}).fill('候选人展示了项目代码和测试记录；独立运维经验继续培养。');
+  await dialog.getByLabel('面试结论',{exact:true}).selectOption('pass');
+  await dialog.getByRole('button',{name:'保存面试',exact:true}).click();
+  await expect(page.getByText('候选人展示了项目代码和测试记录；独立运维经验继续培养。',{exact:true})).toBeVisible();
+  await page.reload();await expect(page.getByText('候选人展示了项目代码和测试记录；独立运维经验继续培养。',{exact:true})).toBeVisible();
+  const final=(await (await request.get('/api/workspace')).json());
+  expect(final.reviews).toHaveLength(1);expect(final.interviews[0].outcome).toBe('pass');expect(final.applications[0].stage).toBe('interview');
+  const exported=await request.get(`/api/analyses/${final.analyses[0].id}/export`);expect(exported.ok()).toBeTruthy();expect((await exported.json()).reviews).toHaveLength(1);
+  await page.screenshot({path:path.join(proof,'03-interview.png'),fullPage:true});
+  await nav.getByRole('button',{name:'工作台',exact:true}).click();await page.screenshot({path:path.join(proof,'04-dashboard.png'),fullPage:true});
+  expect(pageErrors).toEqual([]);
+  writeFileSync(path.join(proof,'browser-proof.json'),JSON.stringify({status:'PASS',browser:browser.version(),path:'UI create job → UI import resume → UI link → UI analyze → evidence highlight → human review → interview record → refresh → HTTP side effect read',counts:{jobs:final.jobs.length,candidates:final.candidates.length,analyses:final.analyses.length,reviews:final.reviews.length,interviews:final.interviews.length},pageErrors,realModelCalled:false},null,2));
+});
+
+test('简历文件上传与移动宽度布局',async({page,request})=>{
+  await page.goto('/#candidates');await page.locator('.section-heading').getByRole('button',{name:'添加候选人',exact:true}).click();
+  const dialog=page.getByRole('dialog');await dialog.getByRole('tab',{name:'上传简历文件'}).click();
+  await dialog.getByLabel('候选人姓名',{exact:true}).fill('文件上传验收样例');
+  await dialog.getByLabel('简历文件',{exact:true}).setInputFiles({name:'synthetic-resume.txt',mimeType:'text/plain',buffer:Buffer.from(resume)});
+  await dialog.getByRole('button',{name:'上传并解析',exact:true}).click();
+  await expect(page.getByRole('heading',{name:'文件上传验收样例',exact:true})).toBeVisible();
+  const state=await (await request.get('/api/workspace')).json();const candidate=state.candidates.find((c:{name:string})=>c.name==='文件上传验收样例');expect(candidate.resumeText).toBe(resume);expect(candidate.parseStatus).toBe('ready');
+  await page.setViewportSize({width:390,height:844});await page.goto('/');
+  await expect(page.getByRole('heading',{name:'招聘工作台',exact:true})).toBeVisible();
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+2);expect(overflow).toBe(false);
+  await page.screenshot({path:path.join(proof,'05-mobile.png'),fullPage:true});
+});

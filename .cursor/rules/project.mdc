@@ -1,0 +1,8 @@
+---
+description: Hire Workbench 项目事实与验证入口
+alwaysApply: true
+---
+
+先读取仓库根目录 `AGENTS.md`。它是项目约束和工作命令的唯一入口。
+
+沿用已安装的官方 pstack。涉及用户行为的修改使用 `.cursor/skills/verify-hire-workbench/SKILL.md`，按 feature map 驱动实际应用并保留证据。
